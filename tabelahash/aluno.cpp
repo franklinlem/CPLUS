@@ -1,16 +1,16 @@
-#include "aluno.h" 
-    Aluno::Aluno {
-
+#include "aluno.h"
+using namespace std;
+    Aluno::Aluno(){
         ra = -1;
-        nome = "";
+        nome = " ";
     }
-    Aluno::Aluno(int r, int n){
+    Aluno::Aluno(int r, string n){
         ra = r;
         nome = n;
     }
-    int Aluno::int obterRa(){
-
+    int Aluno::obterRa(){
+        return ra;
     }
     string Aluno::obterNome(){
-
+        return nome;
     }

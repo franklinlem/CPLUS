@@ -3,10 +3,10 @@ using namespace std;
 class Aluno {
     private:
         int ra;
-        int nome;
+        string nome;
     public:
         Aluno();
-        Aluno(int r, int n);
+        Aluno(int r, string n);
         int obterRa();
         string obterNome();   
 };

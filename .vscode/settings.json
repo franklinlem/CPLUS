@@ -1,6 +1,8 @@
 {
     "C_Cpp.default.compilerPath": "",
     "files.associations": {
-        "avaliativa.C": "cpp"
+        "*.embeddedhtml": "html",
+        "avaliativa.C": "cpp",
+        "ostream": "cpp"
     }
 }
