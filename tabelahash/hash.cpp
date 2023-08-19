@@ -20,31 +20,52 @@ using namespace std;
         return (quant_itens);
     }
     void Hash::inserir(Aluno aluno){
+        if (estacheio()){
+            cout << "A tabela Hash esta cheia!\n";
+            cout << "O elemento nao pode ser inserido!\n";
+        } else{
         int local = FuncaoHash(aluno);
+        while (estrutura[local].obterRa() > 0){
+            local = (local + 1) % max_posicoes;
+        }
         estrutura[local] = aluno;
         quant_itens++;
+        }
     }
     void Hash::deletar(Aluno aluno){
         int local = FuncaoHash(aluno);
-        if (estrutura[local].obterRa() != -1){
-            estrutura[local] = Aluno(-1, " ");
-            quant_itens--;
+        bool teste = false;
+        while (estrutura[local].obterRa() != -1){
+            if (estrutura[local].obterRa() == aluno.obterRa()){
+                cout << "Elemento removido!\n";
+                estrutura[local] = Aluno(-2, " ");
+                quant_itens--;
+                teste = true;
+                break;
+            }
+            local = (local + 1) % max_posicoes;
+        }
+        if (!teste){
+            cout << "Elemento não encontrado!\n";
+            cout << "Nenhum elemento foi removido!\n";
         }
     }
     void Hash::buscar(Aluno& aluno, bool& busca){
         int local = FuncaoHash(aluno);
-        Aluno aux = estrutura[local];
-        if (aluno.obterRa() != aux.obterRa()){
-            busca = false;
-        } else{
-            busca = true;
-            aluno = aux;
+        busca = false;
+        while (estrutura[local].obterRa() != -1){
+            if (estrutura[local].obterRa()  == aluno.obterRa()){
+                busca = true;
+                aluno = estrutura[local];
+                break;
+            }
+            local = (local + 1) % max_posicoes;
         }
     }
     void Hash::imprimir(){
         cout << "Tabela Hash: \n";
         for (int i=0; i<max_posicoes; i++){
-            if (estrutura[i].obterRa() != -1){
+            if (estrutura[i].obterRa() > 0){
                 cout << i << ":" << estrutura[i].obterRa() << endl;
                 cout << estrutura[i].obterNome() << endl;
             }
