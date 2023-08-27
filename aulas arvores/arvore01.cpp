@@ -2,6 +2,12 @@
 
 using namespace std;
 
+struct NodeType{
+        Aluno aluno;
+        NodeType* esquerda;
+        NodeType* direita;
+    };
+
 class Aluno{
         private:
             int ra;
@@ -11,13 +17,23 @@ class Aluno{
             Aluno(int ra, string nome);
             string getNome() const;
             int getRa() const;
+    Aluno(){
+        this -> ra = -1;
+        this -> nome = "";
+    }
+    Aluno(int ra, string nome){
+        this -> ra = ra;
+        this -> nome = nome;
+    }
+    string getNome() const{
+        return nome;
+    }
+    int getRa() const{
+        return ra;
+    }
     };
 
-struct NodeType{
-        Aluno aluno;
-        NodeType *esquerda;
-        NodeType *direita;
-    };
+
 
 class SearchTree{
     public:
@@ -53,7 +69,7 @@ class SearchTree{
                 delete tree;
             }
         }
-        void retrieveAluno(NodeType* tree, Aluno& aluno, bool& found) const {
+        void retrieveAluno(NodeType* tree, Aluno& item, bool& found) const {
             if (tree == NULL)
                 found = false;
             else if (aluno.getRa() < tree->aluno.getRa())
@@ -65,7 +81,7 @@ class SearchTree{
                 found = true;
             }
         }
-        void insertAluno(NodeType*& tree, Aluno aluno){
+        void insertAluno(NodeType*& tree, Aluno item){
             if(tree == NULL){
                 tree = new NodeType;
                 tree -> direita = NULL;
@@ -76,9 +92,38 @@ class SearchTree{
             else
                 insertAluno(tree->direita, aluno);
         }
-        void deleteAluno(NodeType*& tree, int item);
-        void deleteNode(NodeType*& tree);
-        void getSuccessor(NodeType* tree, Aluno& data);
+        void deleteAluno(NodeType*& tree, int item) {
+            if (aluno < tree -> aluno.getRa())
+                deleteAluno(tree->esquerda, aluno);
+            else if (aluno > tree -> aluno.getRa())
+                deleteAluno(tree->direita, aluno);
+            else if (aluno == tree -> aluno.getRa())
+                deleteNode(tree);
+        }
+        void deleteNode(NodeType*& tree){
+            Aluno data;
+            NodeType* tempPtr;
+            tempPtr = tree;
+            if (tree ->esquerda == NULL){
+                tree = tree -> direita;
+                delete tempPtr;
+            }
+            else if (tree -> direita == NULL){
+                tree = tree -> esquerda;
+                delete tempPtr;
+            }
+            else {
+                getSuccessor(tree, data);
+                tree -> aluno = data;
+                deleteAluno(tree->direita, data.getRa());
+            }
+        }
+        void getSuccessor(NodeType* tree, Aluno& data){
+            tree = tree -> direita;
+            while (tree -> esquerda != NULL)
+                tree = tree -> esquerda;
+            data = tree -> aluno;
+        }
         void printTree(NodeType* tree) const;
         void printPreOrder(NodeType* tree) const{
             if (tree != NULL){
@@ -104,22 +149,26 @@ class SearchTree{
         NodeType* root;
 };
 
-Aluno::Aluno(){
-        this->ra = -1;
-        this->nome = " ";
-    };
-    Aluno::Aluno(int ra, string nome){
-        this->ra = ra;
-        this->nome = nome;
-    }
-    string Aluno::getNome() const{
-        return nome;
-    }
-    int Aluno::getRa() const{
-        return ra;
-    }
+const int NUM_ALUNOS = 8;
 
 int main(){
-
+    SearchTree searchTree;
+    int ras[NUM_ALUNOS] =  {20 ,18, 58, 7, 19, 26, 25, 30};
+    string nomes[NUM_ALUNOS] = {"PEDRO", "RAUL", "PAULO", "CARLOS", "LUCAS", "MARIA", "SAMANTA", "ULISSES"};
+    Aluno alunos[NUM_ALUNOS];
+    for (int i = 0;i < NUM_ALUNOS; i++){
+        Aluno aluno = Aluno(ras[i], nomes[i]);
+        alunos[i] = aluno;
+        searchTree.insertAluno(aluno);
+    }
+    cout << "Pre: ";
+    searchTree.printPreOrder();
+    cout << endl;
+    cout << "In: ";
+    searchTree.printInOrder();
+    cout << endl;
+    cout << "Post: ";
+    searchTree.printPostOrder();
+    cout << endl;
     return 0;
 }
