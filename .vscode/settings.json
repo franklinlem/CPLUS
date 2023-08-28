@@ -4,5 +4,6 @@
         "*.embeddedhtml": "html",
         "avaliativa.C": "cpp",
         "ostream": "cpp"
-    }
+    },
+    "cmake.configureOnOpen": false
 }
